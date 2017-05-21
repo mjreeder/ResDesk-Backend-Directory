@@ -1,0 +1,302 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Directory Service
+# during dev, should point to your local machine
+host: localhost:10011
+# basePath prefixes all resource paths
+basePath: /
+#
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+#  /students:
+#      # binds a127 app logic to a route
+#      x-swagger-router-controller: StudentController
+#      get:
+#        tags:
+#         - Students
+#        summary: Get All
+#        description: Returns students with input name to the caller
+#        # used as the method name of the controller
+#        operationId: getAllStudents
+#        responses:
+#          "200":
+#            description: Success
+#            schema:
+#              # a pointer to a definition
+#              $ref: "#/definitions/StudentsResponse"
+#          # responses may fall through to errors
+#          default:
+#            description: Error
+#            schema:
+#              $ref: "#/definitions/ErrorResponse"
+  /students/map:
+      # binds a127 app logic to a route
+      x-swagger-router-controller: StudentController
+      post:
+        tags:
+         - Students
+        summary: Get by ids
+        description: Gets all students based on an array of ids
+        # used as the method name of the controller
+        operationId: getAllStudentsByIDs
+        parameters:
+          - name: data
+            in: body
+            description: the array of student ids
+            required: true
+            schema:
+              type: object
+              properties:
+                idArray:
+                  type: array
+                  items:
+                    type: string
+        responses:
+          "200":
+            description: Success
+            schema:
+              # a pointer to a definition
+              $ref: "#/definitions/StudentsResponse"
+          # responses may fall through to errors
+          default:
+            description: Error
+            schema:
+              $ref: "#/definitions/ErrorResponse"
+  /students/{bsu_id}:
+      x-swagger-router-controller: StudentController
+      get:
+        tags:
+         - Students
+        summary: Get by id
+        description: Returns student by id
+        operationId: getStudentByBSUId
+        parameters:
+        - name: bsu_id
+          in: path
+          description: ID of student to fetch
+          required: true
+          type: integer
+          format: int64
+        responses:
+          "200":
+            description: Success
+            schema:
+              # a pointer to a definition
+              $ref: "#/definitions/StudentsResponse"
+          # responses may fall through to errors
+          default:
+            description: Error
+            schema:
+              $ref: "#/definitions/ErrorResponse"
+  /students/search:
+      x-swagger-router-controller: StudentController
+      get:
+        tags:
+         - Students
+        summary: Search Students
+        description: Returns student by search
+        operationId: getStudentBySearch
+        parameters:
+        - name: any
+          in: query
+          description: a wildcard search testing all fields
+          required: false
+          type: string
+        - name: bsu_id
+          in: query
+          description: the bsu_id for student
+          required: false
+          type: string
+        - name: entry_name
+          in: query
+          description: the entry_name for student
+          required: false
+          type: string
+        - name: name_last
+          in: query
+          description: name_last for student
+          required: false
+          type: string
+        - name: name_first
+          in: query
+          description: name_first for student
+          required: false
+          type: string
+        - name: name_preferred
+          in: query
+          description: name_preferred for student
+          required: false
+          type: string
+        - name: room_space_description
+          in: query
+          description: room_space_description for student
+          required: false
+          type: string
+        - name: phone_mobile_cell
+          in: query
+          description: phone_mobile_cell for student
+          required: false
+          type: string
+        - name: email
+          in: query
+          description: email for student
+          required: false
+          type: string
+        - name: position
+          in: query
+          description: position for student
+          required: false
+          type: string
+        - name: term_detail
+          in: query
+          description: term_detail for student
+          required: false
+          type: string
+        - name: position_date_start
+          in: query
+          description: position_date_start for student
+          required: false
+          type: string
+        - name: position_date_end
+          in: query
+          description: position_date_end for student
+          required: false
+          type: string
+        responses:
+          "200":
+            description: Success
+            schema:
+              # a pointer to a definition
+              $ref: "#/definitions/StudentsResponse"
+          # responses may fall through to errors
+          default:
+            description: Error
+            schema:
+              $ref: "#/definitions/ErrorResponse"
+  /students/resdesk:
+      x-swagger-router-controller: StudentController
+      get:
+        tags:
+         - Students
+        summary: Get all ResDesk users
+        description: Returns all ResDesk authorized users
+        operationId: getAllResDeskUsers
+        responses:
+          "200":
+            description: Success
+            schema:
+              # a pointer to a definition
+              $ref: "#/definitions/StudentsResponse"
+          # responses may fall through to errors
+          default:
+            description: Error
+            schema:
+              $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  StudentsResponse:
+    required:
+      - status
+      - error
+      - description
+      - data
+    properties:
+      status:
+        type: integer
+      error:
+        type: boolean
+      description:
+        type: string
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+            bsu_id:
+              type: integer
+            entry_name:
+              type: string
+            name_last:
+              type: string
+            name_first:
+              type: string
+            name_preferred:
+              type: ['string','null']
+            room_space_description:
+              type: ['string','null']
+            phone_mobile_cell:
+              type: ['integer','null']
+            email:
+              type: ['string','null']
+            position:
+              type: ['string','null']
+            term_detail:
+              type: ['string','null']
+            position_date_start:
+              type: ['string','null']
+            position_date_end:
+              type: ['string','null']
+  StudentResponse:
+    required:
+      - status
+      - error
+      - description
+      - data
+    properties:
+      status:
+        type: integer
+      error:
+        type: boolean
+      description:
+        type: string
+      data:
+        type: object
+        properties:
+          bsu_id:
+            type: integer
+          entry_name:
+            type: string
+          name_last:
+            type: string
+          name_first:
+            type: string
+          name_preferred:
+            type: ['string','null']
+          room_space_description:
+            type: ['string','null']
+          phone_mobile_cell:
+            type: ['integer','null']
+          email:
+            type: ['string','null']
+          position:
+            type: ['string','null']
+          term_detail:
+            type: ['string','null']
+          position_date_start:
+            type: ['string','null']
+          position_date_end:
+            type: ['string','null']
+  ErrorResponse:
+    required:
+      - status
+      - error
+      - description
+    properties:
+      status:
+        type: integer
+      error:
+        type: boolean
+      description:
+        type: string
